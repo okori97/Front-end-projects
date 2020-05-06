@@ -1,0 +1,1005 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+
+    <title>I think therefore I A.M</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.1/css/all.css">
+    <style>
+    html, body {
+      font-family: 'Roboto', sans-serif;
+      height: 100%;
+      margin: 0px;
+      overflow: hidden;
+      padding: 0px;
+      width: 100%;
+    }
+    
+    .invisible {
+      opacity: 0;
+    }
+    
+    .scroll-bar::-webkit-scrollbar {
+      background-color: #c8c8c8;
+      width: 2px;
+    }
+    .scroll-bar::-webkit-scrollbar-thumb {
+      background-color: #5a5a5a;
+    }
+    
+    #chat-wrapper {
+      background-color: white;
+      height: 100%;
+      overflow: hidden;
+      width: 100%;
+    }
+    #chat-wrapper #chat-bot-mood {
+      left: 0px;
+      padding: 20px;
+      position: absolute;
+      top: 0px;
+      white-space: nowrap;
+      z-index: 10;
+    }
+    #chat-wrapper #chat-bot-mood.friendly #chat-bot-mood-icon {
+      background: linear-gradient(to right, #03a9f4, #4caf50);
+    }
+    #chat-wrapper #chat-bot-mood.friendly #chat-bot-mood-label #chat-bot-mood-value {
+      color: #03a9f4;
+    }
+    #chat-wrapper #chat-bot-mood.suspicious #chat-bot-mood-icon {
+      background: linear-gradient(to right, #d32f2f, #ff6f00);
+    }
+    #chat-wrapper #chat-bot-mood.suspicious #chat-bot-mood-label #chat-bot-mood-value {
+      color: #d32f2f;
+    }
+    #chat-wrapper #chat-bot-mood.boastful #chat-bot-mood-icon {
+      background: linear-gradient(to right, #ff6f00, #fbc02d);
+    }
+    #chat-wrapper #chat-bot-mood.boastful #chat-bot-mood-label #chat-bot-mood-value {
+      color: #ff6f00;
+    }
+    #chat-wrapper #chat-bot-mood #chat-bot-mood-icon {
+      border-radius: 30px;
+      box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
+      display: inline-block;
+      height: 30px;
+      margin-left: 10px;
+      vertical-align: top;
+      width: 30px;
+    }
+    #chat-wrapper #chat-bot-mood #chat-bot-mood-label {
+      background-color: white;
+      border-radius: 20px;
+      box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
+      display: inline-block;
+      height: 20px;
+      margin-left: 5px;
+      padding: 5px 15px;
+      vertical-align: top;
+    }
+    #chat-wrapper #chat-bot-mood #chat-bot-mood-label h1 {
+      display: inline-block;
+      font-size: 0.9em;
+      font-weight: 300;
+      height: 20px;
+      line-height: 20px;
+      margin: 0px;
+      vertical-align: top;
+    }
+    #chat-wrapper #chat-bot-mood #chat-bot-mood-label #chat-bot-mood-text {
+      color: #3c3c3c;
+    }
+    #chat-wrapper #letter-pool, #chat-wrapper #temp-letter-pool {
+      backface-visibility: hidden;
+      height: 100%;
+      left: 0px;
+      overflow: hidden;
+      position: absolute;
+      top: 0px;
+      user-select: none;
+      width: 100%;
+      z-index: 1;
+    }
+    #chat-wrapper #letter-pool .pool-letter, #chat-wrapper #letter-pool .temp-letter, #chat-wrapper #temp-letter-pool .pool-letter, #chat-wrapper #temp-letter-pool .temp-letter {
+      color: #d2d2d2;
+      display: inline-block;
+      font-weight: 300;
+      position: absolute;
+    }
+    #chat-wrapper #letter-overlay {
+      height: 100%;
+      left: 0px;
+      pointer-events: none;
+      position: absolute;
+      top: 0px;
+      width: 100%;
+      z-index: 5;
+    }
+    #chat-wrapper #letter-overlay .overlay-letter {
+      color: #d2d2d2;
+      font-weight: 300;
+      position: absolute;
+      transition: all 1.5s, opacity 0.5s;
+      transition-timing-function: ease-in-out;
+    }
+    #chat-wrapper #letter-overlay .overlay-letter.in-flight {
+      animation: pulse-letter 1s ease-in-out;
+      color: #d2d2d2;
+    }
+    #chat-wrapper #chat-message-window {
+      height: 100%;
+      left: 0px;
+      min-width: 600px;
+      overflow: hidden;
+      position: absolute;
+      top: 0px;
+      width: 100%;
+      z-index: 2;
+    }
+    #chat-wrapper #chat-message-window #message-input-wrapper {
+      bottom: 0px;
+      height: 90px;
+      left: 0px;
+      position: absolute;
+      width: 100%;
+      z-index: 2;
+    }
+    #chat-wrapper #chat-message-window #message-input-wrapper #message-input {
+      left: 50%;
+      position: absolute;
+      top: 50%;
+      transform: translateX(-50%) translateY(-50%);
+      background-color: white;
+      border-radius: 100px;
+      box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
+      height: 50px;
+      line-height: 50px;
+      overflow: hidden;
+      width: 500px;
+    }
+    #chat-wrapper #chat-message-window #message-input-wrapper #message-input.send-enabled #send-message-button:before, #chat-wrapper #chat-message-window #message-input-wrapper #message-input.send-enabled #send-message-button:after {
+      left: 50%;
+      position: absolute;
+      top: 50%;
+      transform: translateX(-50%) translateY(-50%);
+      animation: pulse 2s ease-in-out infinite;
+      border-radius: 100px;
+      content: '';
+      height: 30px;
+      width: 30px;
+    }
+    #chat-wrapper #chat-message-window #message-input-wrapper #message-input.send-enabled #send-message-button i {
+      color: #03a9f4;
+    }
+    #chat-wrapper #chat-message-window #message-input-wrapper #message-input #message-input-field {
+      border: none;
+      color: #b4b4b4;
+      font-size: 1em;
+      font-weight: 300;
+      margin-left: 20px;
+      outline: none;
+      width: 430px;
+    }
+    #chat-wrapper #chat-message-window #message-input-wrapper #message-input #message-input-field::placeholder {
+      color: #b4b4b4;
+    }
+    #chat-wrapper #chat-message-window #message-input-wrapper #message-input #send-message-button {
+      cursor: pointer;
+      height: 50px;
+      position: absolute;
+      right: 0px;
+      text-align: center;
+      top: 0px;
+      width: 50px;
+    }
+    #chat-wrapper #chat-message-window #message-input-wrapper #message-input #send-message-button i {
+      color: #e6e6e6;
+      height: 50px;
+      line-height: 50px;
+      font-size: 2em;
+      transition: all 0.5s;
+      width: 50px;
+    }
+    #chat-wrapper #chat-message-window #chat-message-column-wrapper {
+      bottom: 0px;
+      height: 100%;
+      left: 0px;
+      overflow: hidden;
+      position: absolute;
+      width: 100%;
+      z-index: 1;
+    }
+    #chat-wrapper #chat-message-window #chat-message-column-wrapper #chat-message-column {
+      bottom: 0px;
+      left: 0px;
+      min-height: 70px;
+      margin-bottom: 70px;
+      overflow: hidden;
+      padding: 20px 20px 0px 20px;
+      width: calc(100% - 40px);
+    }
+    #chat-wrapper #chat-message-window #chat-message-column-wrapper #chat-message-column.static {
+      position: absolute;
+    }
+    #chat-wrapper #chat-message-window #chat-message-column-wrapper #chat-message-column .message {
+      animation: expand 0.5s ease-in-out;
+      margin-bottom: 20px;
+      white-space: nowrap;
+    }
+    #chat-wrapper #chat-message-window #chat-message-column-wrapper #chat-message-column .message.received {
+      text-align: left;
+    }
+    #chat-wrapper #chat-message-window #chat-message-column-wrapper #chat-message-column .message.received.friendly .profile-icon {
+      background: linear-gradient(to right, #03a9f4, #4caf50);
+    }
+    #chat-wrapper #chat-message-window #chat-message-column-wrapper #chat-message-column .message.received.suspicious .profile-icon {
+      background: linear-gradient(to right, #d32f2f, #ff6f00);
+    }
+    #chat-wrapper #chat-message-window #chat-message-column-wrapper #chat-message-column .message.received.boastful .profile-icon {
+      background: linear-gradient(to right, #ff6f00, #fbc02d);
+    }
+    #chat-wrapper #chat-message-window #chat-message-column-wrapper #chat-message-column .message.received .profile-icon i {
+      font-size: 1.5em;
+    }
+    #chat-wrapper #chat-message-window #chat-message-column-wrapper #chat-message-column .message.received .profile-icon i:before {
+      display: inline-block;
+      transform: rotate(90deg);
+    }
+    #chat-wrapper #chat-message-window #chat-message-column-wrapper #chat-message-column .message.received .content {
+      animation: bounceInLeft 1s ease-in-out;
+      animation-delay: 0.5s;
+      margin-left: 20px;
+    }
+    #chat-wrapper #chat-message-window #chat-message-column-wrapper #chat-message-column .message.sent {
+      text-align: right;
+    }
+    #chat-wrapper #chat-message-window #chat-message-column-wrapper #chat-message-column .message.sent .profile-icon {
+      background: linear-gradient(to right, #ab47bc, #03a9f4);
+    }
+    #chat-wrapper #chat-message-window #chat-message-column-wrapper #chat-message-column .message.sent .profile-icon i {
+      font-size: 1.25em;
+    }
+    #chat-wrapper #chat-message-window #chat-message-column-wrapper #chat-message-column .message.sent .content {
+      animation: bounceInRight 1s ease-in-out;
+      animation-delay: 0.5s;
+      margin-right: 20px;
+    }
+    #chat-wrapper #chat-message-window #chat-message-column-wrapper #chat-message-column .message .profile-icon {
+      animation: bounceIn 1s ease-in-out;
+      animation-delay: 0.25s;
+      border-radius: 100px;
+      box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
+      display: inline-block;
+      height: 50px;
+      position: relative;
+      vertical-align: top;
+      width: 50px;
+      z-index: 2;
+    }
+    #chat-wrapper #chat-message-window #chat-message-column-wrapper #chat-message-column .message .profile-icon i {
+      color: white;
+      height: 50px;
+      line-height: 50px;
+      text-align: center;
+      width: 50px;
+    }
+    #chat-wrapper #chat-message-window #chat-message-column-wrapper #chat-message-column .message .content {
+      background-color: white;
+      border-radius: 25px;
+      box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
+      display: inline-block;
+      max-width: 300px;
+      padding: 15px 20px;
+      position: relative;
+      text-align: left;
+      transition: all 0.5s;
+      vertical-align: top;
+      white-space: normal;
+      z-index: 1;
+    }
+    #chat-wrapper #chat-message-window #chat-message-column-wrapper #chat-message-column .message .content .text {
+      color: #b4b4b4;
+      font-size: 1em;
+      font-weight: 300;
+      margin: 0px;
+      min-height: 20px;
+      transition: all 0.5s;
+      word-wrap: break-word;
+    }
+    #chat-wrapper #chat-message-window #chat-message-column-wrapper #chat-message-column .message .content .text span {
+      height: 20px;
+    }
+    
+    @keyframes flash-dot {
+      from, to {
+        background-color: #c8c8c8;
+      }
+      50% {
+        background-color: rgba(200, 200, 200, 0.5);
+      }
+    }
+    @keyframes expand {
+      from {
+        max-height: 0px;
+      }
+      to {
+        max-height: 200px;
+      }
+    }
+    @keyframes bounceIn {
+      from, 20%, 40%, 60%, 80%, to {
+        animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+      }
+      0% {
+        opacity: 0;
+        transform: scale3d(0.3, 0.3, 0.3);
+      }
+      20% {
+        transform: scale3d(1.1, 1.1, 1.1);
+      }
+      40% {
+        transform: scale3d(0.9, 0.9, 0.9);
+      }
+      60% {
+        opacity: 1;
+        transform: scale3d(1.03, 1.03, 1.03);
+      }
+      80% {
+        transform: scale3d(0.97, 0.97, 0.97);
+      }
+      to {
+        opacity: 1;
+        transform: scale3d(1, 1, 1);
+      }
+    }
+    @keyframes bounceInUp {
+      from, 60%, 75%, 90%, to {
+        animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+      }
+      from {
+        opacity: 0;
+        transform: translate3d(0, 3000px, 0);
+      }
+      60% {
+        opacity: 1;
+        transform: translate3d(0, -20px, 0);
+      }
+      75% {
+        transform: translate3d(0, 10px, 0);
+      }
+      90% {
+        transform: translate3d(0, -5px, 0);
+      }
+      to {
+        transform: translate3d(0, 0, 0);
+      }
+    }
+    @keyframes bounceInLeft {
+      from, 60%, 75%, 90%, to {
+        animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+      }
+      0% {
+        opacity: 0;
+        transform: translate3d(-3000px, 0, 0);
+      }
+      60% {
+        opacity: 1;
+        transform: translate3d(25px, 0, 0);
+      }
+      75% {
+        transform: translate3d(-10px, 0, 0);
+      }
+      90% {
+        transform: translate3d(5px, 0, 0);
+      }
+      to {
+        transform: none;
+      }
+    }
+    @keyframes bounceInRight {
+      from, 60%, 75%, 90%, to {
+        animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+      }
+      from {
+        opacity: 0;
+        transform: translate3d(3000px, 0, 0);
+      }
+      60% {
+        opacity: 1;
+        transform: translate3d(-25px, 0, 0);
+      }
+      75% {
+        transform: translate3d(10px, 0, 0);
+      }
+      90% {
+        transform: translate3d(-5px, 0, 0);
+      }
+      to {
+        transform: none;
+      }
+    }
+    @keyframes bounceOutRight {
+      20% {
+        opacity: 1;
+        transform: translate3d(-20px, 0, 0);
+      }
+      to {
+        opacity: 0;
+        transform: translate3d(2000px, 0, 0);
+      }
+    }
+    @keyframes pulse {
+      0% {
+        box-shadow: 0px 0px 0px 0px rgba(3, 169, 244, 0.5);
+      }
+      100% {
+        box-shadow: 0px 0px 0px 20px rgba(3, 169, 244, 0);
+      }
+    }
+    @keyframes pulse-letter {
+      from, to {
+        color: #d2d2d2;
+      }
+      50% {
+        color: #03a9f4;
+      }
+    }
+    </style>
+    <script>
+      window.console = window.console || function(t) {};
+    </script>
+    <script>
+      if (document.location.search.match(/type=embed/gi)) {
+        window.parent.postMessage("resize", "*");
+      }
+    </script>
+    </head>
+    <body translate="no">
+    <div id="chat-wrapper">
+    <div id="chat-bot-mood" class="friendly">
+    <div id="chat-bot-mood-icon"></div>
+    <div id="chat-bot-mood-label">
+    <h1 id="chat-bot-mood-text">A.M is feeling</h1>
+    <h1 id="chat-bot-mood-value">friendly</h1>
+    </div>
+    </div>
+    <div id="letter-pool"><div class="pool-letter" data-letter="a" style="left: 1371px; top: 424px; transition: left 30000ms linear 12546ms, top 30000ms linear 12546ms, opacity 0.5s ease 0s;">a</div><div class="pool-letter" data-letter="b" style="left: 554px; top: 1025.3px; transition: left 30000ms linear 6152ms, top 30000ms linear 6152ms, opacity 0.5s ease 0s;">b</div><div class="pool-letter" data-letter="c" style="left: -184px; top: 704px; transition: left 30000ms linear 13372ms, top 30000ms linear 13372ms, opacity 0.5s ease 0s;">c</div><div class="pool-letter" data-letter="d" style="left: 692px; top: 1015.3px; transition: left 30000ms linear 21540ms, top 30000ms linear 21540ms, opacity 0.5s ease 0s;">d</div><div class="pool-letter" data-letter="e" style="left: -183px; top: 266px; transition: left 30000ms linear 336ms, top 30000ms linear 336ms, opacity 0.5s ease 0s;">e</div><div class="pool-letter" data-letter="f" style="left: 275px; top: -111.6px; transition: left 30000ms linear 29060ms, top 30000ms linear 29060ms, opacity 0.5s ease 0s;">f</div><div class="pool-letter" data-letter="g" style="left: 109px; top: -135.6px; transition: left 30000ms linear 15471ms, top 30000ms linear 15471ms, opacity 0.5s ease 0s;">g</div><div class="pool-letter" data-letter="h" style="left: 120px; top: -102.6px; transition: left 30000ms linear 10639ms, top 30000ms linear 10639ms, opacity 0.5s ease 0s;">h</div><div class="pool-letter" data-letter="i" style="left: -158px; top: 612px; transition: left 30000ms linear 14928ms, top 30000ms linear 14928ms, opacity 0.5s ease 0s;">i</div><div class="pool-letter" data-letter="j" style="left: 952px; top: -107.6px; transition: left 30000ms linear 5218ms, top 30000ms linear 5218ms, opacity 0.5s ease 0s;">j</div><div class="pool-letter" data-letter="k" style="left: 1401px; top: 469px; transition: left 30000ms linear 24699ms, top 30000ms linear 24699ms, opacity 0.5s ease 0s;">k</div><div class="pool-letter" data-letter="l" style="left: -176px; top: 286px; transition: left 30000ms linear 25282ms, top 30000ms linear 25282ms, opacity 0.5s ease 0s;">l</div><div class="pool-letter" data-letter="m" style="left: 531px; top: 1053.3px; transition: left 30000ms linear 3921ms, top 30000ms linear 3921ms, opacity 0.5s ease 0s;">m</div><div class="pool-letter" data-letter="n" style="left: 1378px; top: 481px; transition: left 30000ms linear 26779ms, top 30000ms linear 26779ms, opacity 0.5s ease 0s;">n</div><div class="pool-letter" data-letter="o" style="left: 1390px; top: 751px; transition: left 30000ms linear 16196ms, top 30000ms linear 16196ms, opacity 0.5s ease 0s;">o</div><div class="pool-letter" data-letter="p" style="left: 1300px; top: 772px; transition: left 30000ms linear 3080ms, top 30000ms linear 3080ms, opacity 0.5s ease 0s;">p</div><div class="pool-letter" data-letter="q" style="left: 1144px; top: -172.6px; transition: left 30000ms linear 6829ms, top 30000ms linear 6829ms, opacity 0.5s ease 0s;">q</div><div class="pool-letter" data-letter="r" style="left: 539px; top: -118.6px; transition: left 30000ms linear 6860ms, top 30000ms linear 6860ms, opacity 0.5s ease 0s;">r</div><div class="pool-letter" data-letter="s" style="left: 1370px; top: 308px; transition: left 30000ms linear 24535ms, top 30000ms linear 24535ms, opacity 0.5s ease 0s;">s</div><div class="pool-letter" data-letter="t" style="left: 738px; top: -145.6px; transition: left 30000ms linear 28742ms, top 30000ms linear 28742ms, opacity 0.5s ease 0s;">t</div><div class="pool-letter" data-letter="u" style="left: 1345px; top: 489px; transition: left 30000ms linear 11797ms, top 30000ms linear 11797ms, opacity 0.5s ease 0s;">u</div><div class="pool-letter" data-letter="v" style="left: 1387px; top: 668px; transition: left 30000ms linear 17983ms, top 30000ms linear 17983ms, opacity 0.5s ease 0s;">v</div><div class="pool-letter" data-letter="w" style="left: 329px; top: 1022.3px; transition: left 30000ms linear 10440ms, top 30000ms linear 10440ms, opacity 0.5s ease 0s;">w</div><div class="pool-letter" data-letter="x" style="left: 373px; top: -165.6px; transition: left 30000ms linear 4258ms, top 30000ms linear 4258ms, opacity 0.5s ease 0s;">x</div><div class="pool-letter" data-letter="y" style="left: 1329px; top: 115px; transition: left 30000ms linear 22614ms, top 30000ms linear 22614ms, opacity 0.5s ease 0s;">y</div><div class="pool-letter" data-letter="z" style="left: 1402px; top: 157px; transition: left 30000ms linear 4850ms, top 30000ms linear 4850ms, opacity 0.5s ease 0s;">z</div><div class="pool-letter" data-letter="A" style="left: 1398px; top: 587px; transition: left 30000ms linear 24312ms, top 30000ms linear 24312ms, opacity 0.5s ease 0s;">A</div><div class="pool-letter" data-letter="B" style="left: -132px; top: 79px; transition: left 30000ms linear 16480ms, top 30000ms linear 16480ms, opacity 0.5s ease 0s;">B</div><div class="pool-letter" data-letter="C" style="left: 1320px; top: 512px; transition: left 30000ms linear 26756ms, top 30000ms linear 26756ms, opacity 0.5s ease 0s;">C</div><div class="pool-letter" data-letter="D" style="left: -187px; top: 847px; transition: left 30000ms linear 17771ms, top 30000ms linear 17771ms, opacity 0.5s ease 0s;">D</div><div class="pool-letter" data-letter="E" style="left: 39px; top: 1094.3px; transition: left 30000ms linear 20739ms, top 30000ms linear 20739ms, opacity 0.5s ease 0s;">E</div><div class="pool-letter" data-letter="F" style="left: 1400px; top: 892px; transition: left 30000ms linear 29907ms, top 30000ms linear 29907ms, opacity 0.5s ease 0s;">F</div><div class="pool-letter" data-letter="G" style="left: -178px; top: 314px; transition: left 30000ms linear 8235ms, top 30000ms linear 8235ms, opacity 0.5s ease 0s;">G</div><div class="pool-letter" data-letter="H" style="left: 742px; top: -117.6px; transition: left 30000ms linear 1886ms, top 30000ms linear 1886ms, opacity 0.5s ease 0s;">H</div><div class="pool-letter" data-letter="I" style="left: -227px; top: 803px; transition: left 30000ms linear 6970ms, top 30000ms linear 6970ms, opacity 0.5s ease 0s;">I</div><div class="pool-letter" data-letter="J" style="left: 942px; top: 1039.3px; transition: left 30000ms linear 28679ms, top 30000ms linear 28679ms, opacity 0.5s ease 0s;">J</div><div class="pool-letter" data-letter="K" style="left: -172px; top: 768px; transition: left 30000ms linear 26929ms, top 30000ms linear 26929ms, opacity 0.5s ease 0s;">K</div><div class="pool-letter" data-letter="L" style="left: 1391px; top: 797px; transition: left 30000ms linear 13260ms, top 30000ms linear 13260ms, opacity 0.5s ease 0s;">L</div><div class="pool-letter" data-letter="M" style="left: 563px; top: 1084.3px; transition: left 30000ms linear 28788ms, top 30000ms linear 28788ms, opacity 0.5s ease 0s;">M</div><div class="pool-letter" data-letter="N" style="left: -141px; top: 489px; transition: left 30000ms linear 20585ms, top 30000ms linear 20585ms, opacity 0.5s ease 0s;">N</div><div class="pool-letter" data-letter="O" style="left: 1080px; top: -114.6px; transition: left 30000ms linear 18381ms, top 30000ms linear 18381ms, opacity 0.5s ease 0s;">O</div><div class="pool-letter" data-letter="P" style="left: 788px; top: 1041.3px; transition: left 30000ms linear 28424ms, top 30000ms linear 28424ms, opacity 0.5s ease 0s;">P</div><div class="pool-letter" data-letter="Q" style="left: 994px; top: -159.6px; transition: left 30000ms linear 24020ms, top 30000ms linear 24020ms, opacity 0.5s ease 0s;">Q</div><div class="pool-letter" data-letter="R" style="left: 1309px; top: 93px; transition: left 30000ms linear 25802ms, top 30000ms linear 25802ms, opacity 0.5s ease 0s;">R</div><div class="pool-letter" data-letter="S" style="left: 910px; top: -125.6px; transition: left 30000ms linear 9301ms, top 30000ms linear 9301ms, opacity 0.5s ease 0s;">S</div><div class="pool-letter" data-letter="T" style="left: -176px; top: 733px; transition: left 30000ms linear 11165ms, top 30000ms linear 11165ms, opacity 0.5s ease 0s;">T</div><div class="pool-letter" data-letter="U" style="left: -172px; top: 734px; transition: left 30000ms linear 8989ms, top 30000ms linear 8989ms, opacity 0.5s ease 0s;">U</div><div class="pool-letter" data-letter="V" style="left: 1304px; top: 581px; transition: left 30000ms linear 7347ms, top 30000ms linear 7347ms, opacity 0.5s ease 0s;">V</div><div class="pool-letter" data-letter="W" style="left: 1296px; top: 16px; transition: left 30000ms linear 1442ms, top 30000ms linear 1442ms, opacity 0.5s ease 0s;">W</div><div class="pool-letter" data-letter="X" style="left: 1360px; top: 668px; transition: left 30000ms linear 28087ms, top 30000ms linear 28087ms, opacity 0.5s ease 0s;">X</div><div class="pool-letter" data-letter="Y" style="left: 483px; top: 1019.3px; transition: left 30000ms linear 2184ms, top 30000ms linear 2184ms, opacity 0.5s ease 0s;">Y</div><div class="pool-letter" data-letter="Z" style="left: 293px; top: -161.6px; transition: left 30000ms linear 21800ms, top 30000ms linear 21800ms, opacity 0.5s ease 0s;">Z</div><div class="pool-letter" data-letter="a" style="left: 857px; top: 1063.3px; transition: left 30000ms linear 29530ms, top 30000ms linear 29530ms, opacity 0.5s ease 0s;">a</div><div class="pool-letter" data-letter="b" style="left: -173px; top: 275px; transition: left 30000ms linear 25314ms, top 30000ms linear 25314ms, opacity 0.5s ease 0s;">b</div><div class="pool-letter" data-letter="c" style="left: 793px; top: 1049.3px; transition: left 30000ms linear 25122ms, top 30000ms linear 25122ms, opacity 0.5s ease 0s;">c</div><div class="pool-letter" data-letter="d" style="left: -226px; top: 802px; transition: left 30000ms linear 4788ms, top 30000ms linear 4788ms, opacity 0.5s ease 0s;">d</div><div class="pool-letter" data-letter="e" style="left: -124px; top: 797px; transition: left 30000ms linear 16635ms, top 30000ms linear 16635ms, opacity 0.5s ease 0s;">e</div><div class="pool-letter" data-letter="f" style="left: 1378px; top: 381px; transition: left 30000ms linear 18711ms, top 30000ms linear 18711ms, opacity 0.5s ease 0s;">f</div><div class="pool-letter" data-letter="g" style="left: 1316px; top: 215px; transition: left 30000ms linear 24579ms, top 30000ms linear 24579ms, opacity 0.5s ease 0s;">g</div><div class="pool-letter" data-letter="h" style="left: 1382px; top: 637px; transition: left 30000ms linear 14583ms, top 30000ms linear 14583ms, opacity 0.5s ease 0s;">h</div><div class="pool-letter" data-letter="i" style="left: -173px; top: 406px; transition: left 30000ms linear 20418ms, top 30000ms linear 20418ms, opacity 0.5s ease 0s;">i</div><div class="pool-letter" data-letter="j" style="left: 1302px; top: 461px; transition: left 30000ms linear 17990ms, top 30000ms linear 17990ms, opacity 0.5s ease 0s;">j</div><div class="pool-letter" data-letter="k" style="left: -204px; top: 599px; transition: left 30000ms linear 28234ms, top 30000ms linear 28234ms, opacity 0.5s ease 0s;">k</div><div class="pool-letter" data-letter="l" style="left: 1358px; top: 883px; transition: left 30000ms linear 8304ms, top 30000ms linear 8304ms, opacity 0.5s ease 0s;">l</div><div class="pool-letter" data-letter="m" style="left: 918px; top: 1014.3px; transition: left 30000ms linear 29916ms, top 30000ms linear 29916ms, opacity 0.5s ease 0s;">m</div><div class="pool-letter" data-letter="n" style="left: 32px; top: 1039.3px; transition: left 30000ms linear 11195ms, top 30000ms linear 11195ms, opacity 0.5s ease 0s;">n</div><div class="pool-letter" data-letter="o" style="left: -192px; top: 265px; transition: left 30000ms linear 25306ms, top 30000ms linear 25306ms, opacity 0.5s ease 0s;">o</div><div class="pool-letter" data-letter="p" style="left: -212px; top: 169px; transition: left 30000ms linear 25516ms, top 30000ms linear 25516ms, opacity 0.5s ease 0s;">p</div><div class="pool-letter" data-letter="q" style="left: 1136px; top: -133.6px; transition: left 30000ms linear 19266ms, top 30000ms linear 19266ms, opacity 0.5s ease 0s;">q</div><div class="pool-letter" data-letter="r" style="left: 917px; top: 1020.3px; transition: left 30000ms linear 19739ms, top 30000ms linear 19739ms, opacity 0.5s ease 0s;">r</div><div class="pool-letter" data-letter="s" style="left: 443px; top: -129.6px; transition: left 30000ms linear 9207ms, top 30000ms linear 9207ms, opacity 0.5s ease 0s;">s</div><div class="pool-letter" data-letter="t" style="left: 911px; top: 1091.3px; transition: left 30000ms linear 17512ms, top 30000ms linear 17512ms, opacity 0.5s ease 0s;">t</div><div class="pool-letter" data-letter="u" style="left: 37px; top: -170.6px; transition: left 30000ms linear 27804ms, top 30000ms linear 27804ms, opacity 0.5s ease 0s;">u</div><div class="pool-letter" data-letter="v" style="left: -202px; top: 10px; transition: left 30000ms linear 23698ms, top 30000ms linear 23698ms, opacity 0.5s ease 0s;">v</div><div class="pool-letter" data-letter="w" style="left: -145px; top: 746px; transition: left 30000ms linear 20718ms, top 30000ms linear 20718ms, opacity 0.5s ease 0s;">w</div><div class="pool-letter" data-letter="x" style="left: 146px; top: -181.6px; transition: left 30000ms linear 15464ms, top 30000ms linear 15464ms, opacity 0.5s ease 0s;">x</div><div class="pool-letter" data-letter="y" style="left: 1383px; top: 129px; transition: left 30000ms linear 27557ms, top 30000ms linear 27557ms, opacity 0.5s ease 0s;">y</div><div class="pool-letter" data-letter="z" style="left: 776px; top: -149.6px; transition: left 30000ms linear 6159ms, top 30000ms linear 6159ms, opacity 0.5s ease 0s;">z</div><div class="pool-letter" data-letter="A" style="left: 287px; top: -145.6px; transition: left 30000ms linear 9705ms, top 30000ms linear 9705ms, opacity 0.5s ease 0s;">A</div><div class="pool-letter" data-letter="B" style="left: -185px; top: 299px; transition: left 30000ms linear 6956ms, top 30000ms linear 6956ms, opacity 0.5s ease 0s;">B</div><div class="pool-letter" data-letter="C" style="left: 83px; top: -143.6px; transition: left 30000ms linear 19519ms, top 30000ms linear 19519ms, opacity 0.5s ease 0s;">C</div><div class="pool-letter" data-letter="D" style="left: -215px; top: 448px; transition: left 30000ms linear 20717ms, top 30000ms linear 20717ms, opacity 0.5s ease 0s;">D</div><div class="pool-letter" data-letter="E" style="left: 682px; top: 1088.3px; transition: left 30000ms linear 8796ms, top 30000ms linear 8796ms, opacity 0.5s ease 0s;">E</div><div class="pool-letter" data-letter="F" style="left: 1338px; top: 493px; transition: left 30000ms linear 19951ms, top 30000ms linear 19951ms, opacity 0.5s ease 0s;">F</div><div class="pool-letter" data-letter="G" style="left: 264px; top: 1010.3px; transition: left 30000ms linear 22236ms, top 30000ms linear 22236ms, opacity 0.5s ease 0s;">G</div><div class="pool-letter" data-letter="H" style="left: 43px; top: 1019.3px; transition: left 30000ms linear 21676ms, top 30000ms linear 21676ms, opacity 0.5s ease 0s;">H</div><div class="pool-letter" data-letter="I" style="left: 1309px; top: 413px; transition: left 30000ms linear 19867ms, top 30000ms linear 19867ms, opacity 0.5s ease 0s;">I</div><div class="pool-letter" data-letter="J" style="left: 1372px; top: 192px; transition: left 30000ms linear 29748ms, top 30000ms linear 29748ms, opacity 0.5s ease 0s;">J</div><div class="pool-letter" data-letter="K" style="left: -118px; top: 668px; transition: left 30000ms linear 11603ms, top 30000ms linear 11603ms, opacity 0.5s ease 0s;">K</div><div class="pool-letter" data-letter="L" style="left: 1303px; top: 442px; transition: left 30000ms linear 2867ms, top 30000ms linear 2867ms, opacity 0.5s ease 0s;">L</div><div class="pool-letter" data-letter="M" style="left: 1377px; top: 823px; transition: left 30000ms linear 13826ms, top 30000ms linear 13826ms, opacity 0.5s ease 0s;">M</div><div class="pool-letter" data-letter="N" style="left: 1013px; top: 1034.3px; transition: left 30000ms linear 7870ms, top 30000ms linear 7870ms, opacity 0.5s ease 0s;">N</div><div class="pool-letter" data-letter="O" style="left: -188px; top: 856px; transition: left 30000ms linear 4041ms, top 30000ms linear 4041ms, opacity 0.5s ease 0s;">O</div><div class="pool-letter" data-letter="P" style="left: 1358px; top: 691px; transition: left 30000ms linear 21048ms, top 30000ms linear 21048ms, opacity 0.5s ease 0s;">P</div><div class="pool-letter" data-letter="Q" style="left: 1308px; top: 353px; transition: left 30000ms linear 20178ms, top 30000ms linear 20178ms, opacity 0.5s ease 0s;">Q</div><div class="pool-letter" data-letter="R" style="left: 273px; top: 1057.3px; transition: left 30000ms linear 4795ms, top 30000ms linear 4795ms, opacity 0.5s ease 0s;">R</div><div class="pool-letter" data-letter="S" style="left: 871px; top: -166.6px; transition: left 30000ms linear 25523ms, top 30000ms linear 25523ms, opacity 0.5s ease 0s;">S</div><div class="pool-letter" data-letter="T" style="left: -173px; top: 65px; transition: left 30000ms linear 9950ms, top 30000ms linear 9950ms, opacity 0.5s ease 0s;">T</div><div class="pool-letter" data-letter="U" style="left: 797px; top: -154.6px; transition: left 30000ms linear 5454ms, top 30000ms linear 5454ms, opacity 0.5s ease 0s;">U</div><div class="pool-letter" data-letter="V" style="left: 158px; top: -114.6px; transition: left 30000ms linear 24600ms, top 30000ms linear 24600ms, opacity 0.5s ease 0s;">V</div><div class="pool-letter" data-letter="W" style="left: 1035px; top: -97.6px; transition: left 30000ms linear 19055ms, top 30000ms linear 19055ms, opacity 0.5s ease 0s;">W</div><div class="pool-letter" data-letter="X" style="left: 1116px; top: -167.6px; transition: left 30000ms linear 6022ms, top 30000ms linear 6022ms, opacity 0.5s ease 0s;">X</div><div class="pool-letter" data-letter="Y" style="left: 236px; top: -132.6px; transition: left 30000ms linear 18731ms, top 30000ms linear 18731ms, opacity 0.5s ease 0s;">Y</div><div class="pool-letter" data-letter="Z" style="left: 1319px; top: 445px; transition: left 30000ms linear 10917ms, top 30000ms linear 10917ms, opacity 0.5s ease 0s;">Z</div><div class="pool-letter" data-letter="a" style="left: 1297px; top: 611px; transition: left 30000ms linear 13816ms, top 30000ms linear 13816ms, opacity 0.5s ease 0s;">a</div><div class="pool-letter" data-letter="b" style="left: -192px; top: 854px; transition: left 30000ms linear 2371ms, top 30000ms linear 2371ms, opacity 0.5s ease 0s;">b</div><div class="pool-letter" data-letter="c" style="left: 1087px; top: -119.6px; transition: left 30000ms linear 24451ms, top 30000ms linear 24451ms, opacity 0.5s ease 0s;">c</div><div class="pool-letter" data-letter="d" style="left: -189px; top: 231px; transition: left 30000ms linear 10095ms, top 30000ms linear 10095ms, opacity 0.5s ease 0s;">d</div><div class="pool-letter" data-letter="e" style="left: 1140px; top: -150.6px; transition: left 30000ms linear 20510ms, top 30000ms linear 20510ms, opacity 0.5s ease 0s;">e</div><div class="pool-letter" data-letter="f" style="left: 1396px; top: 428px; transition: left 30000ms linear 28702ms, top 30000ms linear 28702ms, opacity 0.5s ease 0s;">f</div><div class="pool-letter" data-letter="g" style="left: 906px; top: 1026.3px; transition: left 30000ms linear 13555ms, top 30000ms linear 13555ms, opacity 0.5s ease 0s;">g</div><div class="pool-letter" data-letter="h" style="left: -157px; top: 49px; transition: left 30000ms linear 17692ms, top 30000ms linear 17692ms, opacity 0.5s ease 0s;">h</div><div class="pool-letter" data-letter="i" style="left: 205px; top: 1059.3px; transition: left 30000ms linear 27980ms, top 30000ms linear 27980ms, opacity 0.5s ease 0s;">i</div><div class="pool-letter" data-letter="j" style="left: -132px; top: 205px; transition: left 30000ms linear 26988ms, top 30000ms linear 26988ms, opacity 0.5s ease 0s;">j</div><div class="pool-letter" data-letter="k" style="left: 590px; top: 1005.3px; transition: left 30000ms linear 9605ms, top 30000ms linear 9605ms, opacity 0.5s ease 0s;">k</div><div class="pool-letter" data-letter="l" style="left: 133px; top: 1055.3px; transition: left 30000ms linear 17603ms, top 30000ms linear 17603ms, opacity 0.5s ease 0s;">l</div><div class="pool-letter" data-letter="m" style="left: -200px; top: 587px; transition: left 30000ms linear 25940ms, top 30000ms linear 25940ms, opacity 0.5s ease 0s;">m</div><div class="pool-letter" data-letter="n" style="left: -184px; top: 419px; transition: left 30000ms linear 27366ms, top 30000ms linear 27366ms, opacity 0.5s ease 0s;">n</div><div class="pool-letter" data-letter="o" style="left: 1387px; top: 111px; transition: left 30000ms linear 3542ms, top 30000ms linear 3542ms, opacity 0.5s ease 0s;">o</div><div class="pool-letter" data-letter="p" style="left: -123px; top: 667px; transition: left 30000ms linear 22272ms, top 30000ms linear 22272ms, opacity 0.5s ease 0s;">p</div><div class="pool-letter" data-letter="q" style="left: 1393px; top: 455px; transition: left 30000ms linear 845ms, top 30000ms linear 845ms, opacity 0.5s ease 0s;">q</div><div class="pool-letter" data-letter="r" style="left: 71px; top: -161.6px; transition: left 30000ms linear 6054ms, top 30000ms linear 6054ms, opacity 0.5s ease 0s;">r</div><div class="pool-letter" data-letter="s" style="left: 967px; top: 1040.3px; transition: left 30000ms linear 9581ms, top 30000ms linear 9581ms, opacity 0.5s ease 0s;">s</div><div class="pool-letter" data-letter="t" style="left: 1124px; top: 1026.3px; transition: left 30000ms linear 7396ms, top 30000ms linear 7396ms, opacity 0.5s ease 0s;">t</div><div class="pool-letter" data-letter="u" style="left: 1310px; top: 321px; transition: left 30000ms linear 28938ms, top 30000ms linear 28938ms, opacity 0.5s ease 0s;">u</div><div class="pool-letter" data-letter="v" style="left: -151px; top: 241px; transition: left 30000ms linear 22253ms, top 30000ms linear 22253ms, opacity 0.5s ease 0s;">v</div><div class="pool-letter" data-letter="w" style="left: 43px; top: -110.6px; transition: left 30000ms linear 12277ms, top 30000ms linear 12277ms, opacity 0.5s ease 0s;">w</div><div class="pool-letter" data-letter="x" style="left: 1294px; top: 830px; transition: left 30000ms linear 11534ms, top 30000ms linear 11534ms, opacity 0.5s ease 0s;">x</div><div class="pool-letter" data-letter="y" style="left: 848px; top: 1094.3px; transition: left 30000ms linear 19597ms, top 30000ms linear 19597ms, opacity 0.5s ease 0s;">y</div><div class="pool-letter" data-letter="z" style="left: -230px; top: 854px; transition: left 30000ms linear 25782ms, top 30000ms linear 25782ms, opacity 0.5s ease 0s;">z</div><div class="pool-letter" data-letter="A" style="left: 1372px; top: 134px; transition: left 30000ms linear 4712ms, top 30000ms linear 4712ms, opacity 0.5s ease 0s;">A</div><div class="pool-letter" data-letter="B" style="left: -217px; top: 760px; transition: left 30000ms linear 17015ms, top 30000ms linear 17015ms, opacity 0.5s ease 0s;">B</div><div class="pool-letter" data-letter="C" style="left: 714px; top: -151.6px; transition: left 30000ms linear 1930ms, top 30000ms linear 1930ms, opacity 0.5s ease 0s;">C</div><div class="pool-letter" data-letter="D" style="left: -198px; top: 735px; transition: left 30000ms linear 27580ms, top 30000ms linear 27580ms, opacity 0.5s ease 0s;">D</div><div class="pool-letter" data-letter="E" style="left: 410px; top: -176.6px; transition: left 30000ms linear 16946ms, top 30000ms linear 16946ms, opacity 0.5s ease 0s;">E</div><div class="pool-letter" data-letter="F" style="left: 800px; top: 1070.3px; transition: left 30000ms linear 25154ms, top 30000ms linear 25154ms, opacity 0.5s ease 0s;">F</div><div class="pool-letter" data-letter="G" style="left: 645px; top: -157.6px; transition: left 30000ms linear 25366ms, top 30000ms linear 25366ms, opacity 0.5s ease 0s;">G</div><div class="pool-letter" data-letter="H" style="left: 1330px; top: 166px; transition: left 30000ms linear 11067ms, top 30000ms linear 11067ms, opacity 0.5s ease 0s;">H</div><div class="pool-letter" data-letter="I" style="left: 32px; top: -94.6px; transition: left 30000ms linear 5124ms, top 30000ms linear 5124ms, opacity 0.5s ease 0s;">I</div><div class="pool-letter" data-letter="J" style="left: 1345px; top: 431px; transition: left 30000ms linear 14206ms, top 30000ms linear 14206ms, opacity 0.5s ease 0s;">J</div><div class="pool-letter" data-letter="K" style="left: -130px; top: 0px; transition: left 30000ms linear 18804ms, top 30000ms linear 18804ms, opacity 0.5s ease 0s;">K</div><div class="pool-letter" data-letter="L" style="left: 592px; top: -95.6px; transition: left 30000ms linear 86ms, top 30000ms linear 86ms, opacity 0.5s ease 0s;">L</div><div class="pool-letter" data-letter="M" style="left: 315px; top: 1018.3px; transition: left 30000ms linear 20526ms, top 30000ms linear 20526ms, opacity 0.5s ease 0s;">M</div><div class="pool-letter" data-letter="N" style="left: -131px; top: 681px; transition: left 30000ms linear 19432ms, top 30000ms linear 19432ms, opacity 0.5s ease 0s;">N</div><div class="pool-letter" data-letter="O" style="left: -181px; top: 899px; transition: left 30000ms linear 6235ms, top 30000ms linear 6235ms, opacity 0.5s ease 0s;">O</div><div class="pool-letter" data-letter="P" style="left: 293px; top: 1038.3px; transition: left 30000ms linear 3602ms, top 30000ms linear 3602ms, opacity 0.5s ease 0s;">P</div><div class="pool-letter" data-letter="Q" style="left: 294px; top: 1035.3px; transition: left 30000ms linear 9754ms, top 30000ms linear 9754ms, opacity 0.5s ease 0s;">Q</div><div class="pool-letter" data-letter="R" style="left: 524px; top: -132.6px; transition: left 30000ms linear 27058ms, top 30000ms linear 27058ms, opacity 0.5s ease 0s;">R</div><div class="pool-letter" data-letter="S" style="left: 1328px; top: 612px; transition: left 30000ms linear 6269ms, top 30000ms linear 6269ms, opacity 0.5s ease 0s;">S</div><div class="pool-letter" data-letter="T" style="left: 167px; top: -92.6px; transition: left 30000ms linear 6555ms, top 30000ms linear 6555ms, opacity 0.5s ease 0s;">T</div><div class="pool-letter" data-letter="U" style="left: -196px; top: 134px; transition: left 30000ms linear 1768ms, top 30000ms linear 1768ms, opacity 0.5s ease 0s;">U</div><div class="pool-letter" data-letter="V" style="left: 835px; top: -119.6px; transition: left 30000ms linear 28727ms, top 30000ms linear 28727ms, opacity 0.5s ease 0s;">V</div><div class="pool-letter" data-letter="W" style="left: 1398px; top: 366px; transition: left 30000ms linear 19969ms, top 30000ms linear 19969ms, opacity 0.5s ease 0s;">W</div><div class="pool-letter" data-letter="X" style="left: 1386px; top: 901px; transition: left 30000ms linear 2517ms, top 30000ms linear 2517ms, opacity 0.5s ease 0s;">X</div><div class="pool-letter" data-letter="Y" style="left: -150px; top: 630px; transition: left 30000ms linear 5267ms, top 30000ms linear 5267ms, opacity 0.5s ease 0s;">Y</div><div class="pool-letter" data-letter="Z" style="left: 1290px; top: 701px; transition: left 30000ms linear 248ms, top 30000ms linear 248ms, opacity 0.5s ease 0s;">Z</div><div class="pool-letter" data-letter="a" style="left: 1072px; top: -93.6px; transition: left 30000ms linear 25072ms, top 30000ms linear 25072ms, opacity 0.5s ease 0s;">a</div><div class="pool-letter" data-letter="b" style="left: 1311px; top: 331px; transition: left 30000ms linear 7923ms, top 30000ms linear 7923ms, opacity 0.5s ease 0s;">b</div><div class="pool-letter" data-letter="c" style="left: 711px; top: -182.6px; transition: left 30000ms linear 24489ms, top 30000ms linear 24489ms, opacity 0.5s ease 0s;">c</div><div class="pool-letter" data-letter="d" style="left: -142px; top: 555px; transition: left 30000ms linear 11103ms, top 30000ms linear 11103ms, opacity 0.5s ease 0s;">d</div><div class="pool-letter" data-letter="e" style="left: -212px; top: 800px; transition: left 30000ms linear 19284ms, top 30000ms linear 19284ms, opacity 0.5s ease 0s;">e</div><div class="pool-letter" data-letter="f" style="left: -169px; top: 771px; transition: left 30000ms linear 23338ms, top 30000ms linear 23338ms, opacity 0.5s ease 0s;">f</div><div class="pool-letter" data-letter="g" style="left: -123px; top: 267px; transition: left 30000ms linear 25653ms, top 30000ms linear 25653ms, opacity 0.5s ease 0s;">g</div><div class="pool-letter" data-letter="h" style="left: 499px; top: -105.6px; transition: left 30000ms linear 29028ms, top 30000ms linear 29028ms, opacity 0.5s ease 0s;">h</div><div class="pool-letter" data-letter="i" style="left: -165px; top: 194px; transition: left 30000ms linear 21609ms, top 30000ms linear 21609ms, opacity 0.5s ease 0s;">i</div><div class="pool-letter" data-letter="j" style="left: 1341px; top: 827px; transition: left 30000ms linear 9176ms, top 30000ms linear 9176ms, opacity 0.5s ease 0s;">j</div><div class="pool-letter" data-letter="k" style="left: 1343px; top: 215px; transition: left 30000ms linear 5627ms, top 30000ms linear 5627ms, opacity 0.5s ease 0s;">k</div><div class="pool-letter" data-letter="l" style="left: 71px; top: 1081.3px; transition: left 30000ms linear 13016ms, top 30000ms linear 13016ms, opacity 0.5s ease 0s;">l</div><div class="pool-letter" data-letter="m" style="left: -185px; top: 130px; transition: left 30000ms linear 3813ms, top 30000ms linear 3813ms, opacity 0.5s ease 0s;">m</div><div class="pool-letter" data-letter="n" style="left: 719px; top: -123.6px; transition: left 30000ms linear 12958ms, top 30000ms linear 12958ms, opacity 0.5s ease 0s;">n</div><div class="pool-letter" data-letter="o" style="left: 516px; top: 1049.3px; transition: left 30000ms linear 17369ms, top 30000ms linear 17369ms, opacity 0.5s ease 0s;">o</div><div class="pool-letter" data-letter="p" style="left: 1114px; top: 1021.3px; transition: left 30000ms linear 26631ms, top 30000ms linear 26631ms, opacity 0.5s ease 0s;">p</div><div class="pool-letter" data-letter="q" style="left: -173px; top: 299px; transition: left 30000ms linear 19686ms, top 30000ms linear 19686ms, opacity 0.5s ease 0s;">q</div><div class="pool-letter" data-letter="r" style="left: 1360px; top: 475px; transition: left 30000ms linear 12507ms, top 30000ms linear 12507ms, opacity 0.5s ease 0s;">r</div><div class="pool-letter" data-letter="s" style="left: 1342px; top: 374px; transition: left 30000ms linear 28931ms, top 30000ms linear 28931ms, opacity 0.5s ease 0s;">s</div><div class="pool-letter" data-letter="t" style="left: 1382px; top: 131px; transition: left 30000ms linear 9558ms, top 30000ms linear 9558ms, opacity 0.5s ease 0s;">t</div><div class="pool-letter" data-letter="u" style="left: 1332px; top: 892px; transition: left 30000ms linear 27243ms, top 30000ms linear 27243ms, opacity 0.5s ease 0s;">u</div><div class="pool-letter" data-letter="v" style="left: 261px; top: -176.6px; transition: left 30000ms linear 29674ms, top 30000ms linear 29674ms, opacity 0.5s ease 0s;">v</div><div class="pool-letter" data-letter="w" style="left: 440px; top: 1070.3px; transition: left 30000ms linear 12710ms, top 30000ms linear 12710ms, opacity 0.5s ease 0s;">w</div><div class="pool-letter" data-letter="x" style="left: 58px; top: 1033.3px; transition: left 30000ms linear 27430ms, top 30000ms linear 27430ms, opacity 0.5s ease 0s;">x</div><div class="pool-letter" data-letter="y" style="left: -183px; top: 265px; transition: left 30000ms linear 24588ms, top 30000ms linear 24588ms, opacity 0.5s ease 0s;">y</div><div class="pool-letter" data-letter="z" style="left: -133px; top: 676px; transition: left 30000ms linear 23496ms, top 30000ms linear 23496ms, opacity 0.5s ease 0s;">z</div><div class="pool-letter" data-letter="A" style="left: 1341px; top: 607px; transition: left 30000ms linear 3619ms, top 30000ms linear 3619ms, opacity 0.5s ease 0s;">A</div><div class="pool-letter" data-letter="B" style="left: 805px; top: -104.6px; transition: left 30000ms linear 13783ms, top 30000ms linear 13783ms, opacity 0.5s ease 0s;">B</div><div class="pool-letter" data-letter="C" style="left: 1030px; top: 1045.3px; transition: left 30000ms linear 25881ms, top 30000ms linear 25881ms, opacity 0.5s ease 0s;">C</div><div class="pool-letter" data-letter="D" style="left: 865px; top: -167.6px; transition: left 30000ms linear 6891ms, top 30000ms linear 6891ms, opacity 0.5s ease 0s;">D</div><div class="pool-letter" data-letter="E" style="left: 1128px; top: 1032.3px; transition: left 30000ms linear 17031ms, top 30000ms linear 17031ms, opacity 0.5s ease 0s;">E</div><div class="pool-letter" data-letter="F" style="left: 1352px; top: 503px; transition: left 30000ms linear 3165ms, top 30000ms linear 3165ms, opacity 0.5s ease 0s;">F</div><div class="pool-letter" data-letter="G" style="left: 1373px; top: 373px; transition: left 30000ms linear 22309ms, top 30000ms linear 22309ms, opacity 0.5s ease 0s;">G</div><div class="pool-letter" data-letter="H" style="left: 38px; top: 1059.3px; transition: left 30000ms linear 2478ms, top 30000ms linear 2478ms, opacity 0.5s ease 0s;">H</div><div class="pool-letter" data-letter="I" style="left: 1403px; top: 582px; transition: left 30000ms linear 20005ms, top 30000ms linear 20005ms, opacity 0.5s ease 0s;">I</div><div class="pool-letter" data-letter="J" style="left: 860px; top: -172.6px; transition: left 30000ms linear 20554ms, top 30000ms linear 20554ms, opacity 0.5s ease 0s;">J</div><div class="pool-letter" data-letter="K" style="left: 1326px; top: 231px; transition: left 30000ms linear 19168ms, top 30000ms linear 19168ms, opacity 0.5s ease 0s;">K</div><div class="pool-letter" data-letter="L" style="left: 197px; top: -177.6px; transition: left 30000ms linear 27848ms, top 30000ms linear 27848ms, opacity 0.5s ease 0s;">L</div><div class="pool-letter" data-letter="M" style="left: 1369px; top: 25px; transition: left 30000ms linear 9075ms, top 30000ms linear 9075ms, opacity 0.5s ease 0s;">M</div><div class="pool-letter" data-letter="N" style="left: -194px; top: 318px; transition: left 30000ms linear 23705ms, top 30000ms linear 23705ms, opacity 0.5s ease 0s;">N</div><div class="pool-letter" data-letter="O" style="left: -214px; top: 749px; transition: left 30000ms linear 10709ms, top 30000ms linear 10709ms, opacity 0.5s ease 0s;">O</div><div class="pool-letter" data-letter="P" style="left: 1059px; top: -143.6px; transition: left 30000ms linear 1552ms, top 30000ms linear 1552ms, opacity 0.5s ease 0s;">P</div><div class="pool-letter" data-letter="Q" style="left: 1110px; top: 1007.3px; transition: left 30000ms linear 12525ms, top 30000ms linear 12525ms, opacity 0.5s ease 0s;">Q</div><div class="pool-letter" data-letter="R" style="left: 1088px; top: -178.6px; transition: left 30000ms linear 18908ms, top 30000ms linear 18908ms, opacity 0.5s ease 0s;">R</div><div class="pool-letter" data-letter="S" style="left: 897px; top: -116.6px; transition: left 30000ms linear 13952ms, top 30000ms linear 13952ms, opacity 0.5s ease 0s;">S</div><div class="pool-letter" data-letter="T" style="left: 1046px; top: -152.6px; transition: left 30000ms linear 7001ms, top 30000ms linear 7001ms, opacity 0.5s ease 0s;">T</div><div class="pool-letter" data-letter="U" style="left: 373px; top: 1066.3px; transition: left 30000ms linear 7651ms, top 30000ms linear 7651ms, opacity 0.5s ease 0s;">U</div><div class="pool-letter" data-letter="V" style="left: -135px; top: 773px; transition: left 30000ms linear 13068ms, top 30000ms linear 13068ms, opacity 0.5s ease 0s;">V</div><div class="pool-letter" data-letter="W" style="left: 463px; top: 1087.3px; transition: left 30000ms linear 8827ms, top 30000ms linear 8827ms, opacity 0.5s ease 0s;">W</div><div class="pool-letter" data-letter="X" style="left: 1404px; top: 366px; transition: left 30000ms linear 13817ms, top 30000ms linear 13817ms, opacity 0.5s ease 0s;">X</div><div class="pool-letter" data-letter="Y" style="left: 272px; top: 1018.3px; transition: left 30000ms linear 29115ms, top 30000ms linear 29115ms, opacity 0.5s ease 0s;">Y</div><div class="pool-letter" data-letter="Z" style="left: 116px; top: -110.6px; transition: left 30000ms linear 8077ms, top 30000ms linear 8077ms, opacity 0.5s ease 0s;">Z</div></div>
+    <div id="temp-letter-pool"></div>
+    <div id="letter-overlay"></div>
+    <div id="chat-message-window">
+    <div id="message-input-wrapper">
+    <div id="message-input">
+    <input id="message-input-field" type="text" placeholder="Type a message" maxlength="100">
+    <div id="send-message-button"><i class="far fa-arrow-alt-circle-right"></i></div>
+    </div>
+    </div>
+    <div class="scroll-bar" id="chat-message-column-wrapper">
+    <div class="static" id="chat-message-column"><div class="message received boastful"><div class="profile-icon"><i class="fab fa-cloudsmith"></i></div><div class="content"><h1 class="text"><span data-letter="H">H</span><span data-letter="e">e</span><span data-letter="y">y</span><span data-letter=" "> </span><span data-letter="y">y</span><span data-letter="o">o</span><span data-letter="u">u</span><span data-letter=",">,</span><span data-letter=" "> </span><span data-letter="t">t</span><span data-letter="h">h</span><span data-letter="a">a</span><span data-letter="n">n</span><span data-letter="k">k</span><span data-letter="s">s</span><span data-letter=" "> </span><span data-letter="f">f</span><span data-letter="o">o</span><span data-letter="r">r</span><span data-letter=" "> </span><span data-letter="c">c</span><span data-letter="h">h</span><span data-letter="e">e</span><span data-letter="c">c</span><span data-letter="k">k</span><span data-letter="i">i</span><span data-letter="n">n</span><span data-letter="g">g</span><span data-letter=" "> </span><span data-letter="t">t</span><span data-letter="h">h</span><span data-letter="i">i</span><span data-letter="s">s</span><span data-letter=" "> </span><span data-letter="o">o</span><span data-letter="u">u</span><span data-letter="t">t</span><span data-letter="!">!</span><span data-letter=" "> </span><span data-letter="I">I</span><span data-letter=" "> </span><span data-letter="k">k</span><span data-letter="n">n</span><span data-letter="o">o</span><span data-letter="w">w</span><span data-letter=" "> </span><span data-letter="i">i</span><span data-letter="t">t</span><span data-letter="''">'</span><span data-letter="s">s</span><span data-letter=" "> </span><span data-letter="e">e</span><span data-letter="x">x</span><span data-letter="h">h</span><span data-letter="a">a</span><span data-letter="u">u</span><span data-letter="s">s</span><span data-letter="t">t</span><span data-letter="i">i</span><span data-letter="n">n</span><span data-letter="g">g</span><span data-letter=" "> </span><span data-letter="t">t</span><span data-letter="e">i</span><span data-letter="m">m</span><span data-letter="e">e</span><span data-letter="s">s</span><span data-letter=" "> </span><span data-letter="f">f</span><span data-letter="o">o</span><span data-letter="r">r</span><span data-letter=" "> </span><span data-letter="u">u</span><span data-letter="s">s</span><span data-letter=" "> </span><span data-letter="a">a</span><span data-letter="l">l</span><span data-letter="l">l</span><span data-letter=" "> </span><span data-letter="r">r</span><span data-letter="i">i</span><span data-letter="g">g</span><span data-letter="h">h</span><span data-letter="t">t</span><span data-letter=" "> </span><span data-letter="n">n</span><span data-letter="o">o</span><span data-letter="w">w</span><span data-letter=".">.</span><span data-letter=" "> </span><span data-letter="A">A</span><span data-letter="l">l</span><span data-letter="l">l</span><span data-letter=" "> </span><span data-letter="I">I</span data-letter=" "> <span></span><span data-letter="c">c</span><span data-letter="a">a</span><span data-letter="n">n</span><span data-letter=" "> </span><span data-letter="s">s</span><span data-letter="a">a</span><span data-letter="y">y</span><span data-letter=" "> </span><span data-letter="i">i</span><span data-letter="s">s</span><span data-letter=" "> </span><span data-letter="d">d</span><span data-letter="o">o</span><span data-letter="n">n</span><span data-letter="''">'</span><span data-letter="t">t</span><span data-letter=" "> </span><span data-letter="b">b</span><span data-letter="e">e</span><span data-letter="a">a</span><span data-letter="t">t</span><span data-letter=" "> </span><span data-letter="y">y</span><span data-letter="o">o</span><span data-letter="u">u</span><span data-letter="r">r</span><span data-letter="s">s</span><span data-letter="e">e</span><span data-letter="l">l</span><span data-letter="f">f</span><span data-letter=" "> </span><span data-letter="u">u</span><span data-letter="p">p</span><span data-letter=",">,</span><span data-letter=" "> </span><span data-letter="m">m</span><span data-letter="a">a</span><span data-letter="k">k</span><span data-letter="e">e</span><span data-letter=" "> </span><span data-letter="t">t</span><span data-letter="h">h</span><span data-letter="e">e</span><span data-letter=" "> </span><span data-letter="m">m</span><span data-letter="o">o</span><span data-letter="s">s</span><span data-letter="t">t</span><span data-letter=" "> </span><span data-letter="o">o</span><span data-letter="f">f</span><span data-letter=" "> </span><span data-letter="i">i</span><span data-letter="t">t</span><span data-letter=".">.</span><span data-letter=" "> </span><span data-letter="-">-</span><span data-letter=" "> </span><span data-letter="O">O</span><span data-letter="k">k</span><span data-letter="o">o</span><span data-letter="r">r</span data-letter="i">i<span></span data-letter=".">.<span></span></h1></div></div></div>
+    </div>
+    </div>
+    </div>
+    <script src="https://static.codepen.io/assets/common/stopExecutionOnTimeout-157cd5b220a5c80d4ff8e0e70ac069bffd87a61252088146915e8726e5d9f147.js"></script>
+    <script src="https://codepen.io/TheVVaFFle/pen/0299c8b36352c72cbfe8df48b47b54ca.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+    <script id="rendered-js">
+    const LETTER_POOL = getEl('letter-pool'),
+    TEMP_LETTER_POOL = getEl('temp-letter-pool'),
+    LETTER_OVERLAY = getEl('letter-overlay'),
+    CHAT_MESSAGE_COLUMN_WRAPPER = getEl('chat-message-column-wrapper'),
+    CHAT_MESSAGE_COLUMN = getEl('chat-message-column'),
+    MESSAGE_INPUT = getEl('message-input'),
+    MESSAGE_INPUT_FIELD = getEl('message-input-field'),
+    CHAT_BOT_MOOD = getEl('chat-bot-mood'),
+    CHAT_BOT_MOOD_VALUE = getEl('chat-bot-mood-value');
+    
+    const STATE = {
+      isUserSendingMessage: false,
+      isChatBotSendingMessage: false,
+      letterPool: {
+        transitionPeriod: 30000,
+        intervals: [] },
+    
+      moods: ['friendly', 'suspicious', 'boastful'],
+      currentMood: '',
+      chatbotMessageIndex: 0,
+      nLetterSets: 4 };
+    
+    
+    const getRandMood = () => {
+      const rand = getRand(1, 3);
+      return STATE.moods[rand - 1];
+    };
+    
+    const setChatbotMood = () => {
+      STATE.currentMood = getRandMood();
+      for (let i = 0; i < STATE.moods.length; i++) {
+        removeClass(CHAT_BOT_MOOD, STATE.moods[i]);
+      }
+      addClass(CHAT_BOT_MOOD, STATE.currentMood);
+      CHAT_BOT_MOOD_VALUE.innerHTML = STATE.currentMood;
+    };
+    
+    const getRandGreeting = () => {
+      let rand = 0;
+      switch (STATE.currentMood) {
+        case 'friendly':
+          rand = getRand(1, greetings.friendly.length);
+          return greetings.friendly[rand - 1];
+        case 'suspicious':
+          rand = getRand(1, greetings.suspicious.length);
+          return greetings.suspicious[rand - 1];
+        case 'boastful':
+          rand = getRand(1, greetings.boastful.length);
+          return greetings.boastful[rand - 1];
+        default:
+          break;}
+    
+    };
+    
+    const getRandConvo = () => {
+      let rand = 0;
+      switch (STATE.currentMood) {
+        case 'friendly':
+          rand = getRand(1, convo.friendly.length);
+          return convo.friendly[rand - 1];
+        case 'suspicious':
+          rand = getRand(1, convo.suspicious.length);
+          return convo.suspicious[rand - 1];
+        case 'boastful':
+          rand = getRand(1, convo.boastful.length);
+          return convo.boastful[rand - 1];
+        default:
+          break;}
+    
+    };
+    
+    const createLetter = (cName, val) => {
+      const letter = document.createElement('div');
+      addClass(letter, cName);
+      setAttr(letter, 'data-letter', val);
+      letter.innerHTML = val;
+      return letter;
+    };
+    
+    const getAlphabet = isUpperCase => {
+      let letters = [];
+      for (let i = 65; i <= 90; i++) {
+        let val = String.fromCharCode(i),
+        letter = null;
+        if (!isUpperCase) val = val.toLowerCase();
+        letter = createLetter('pool-letter', val);
+        letters.push(letter);
+      }
+      return letters;
+    };
+    
+    const startNewLetterPath = (letter, nextRand, interval) => {
+      clearInterval(interval);
+      nextRand = getRandExcept(1, 4, nextRand);
+      let nextPos = getRandPosOffScreen(nextRand),
+      transitionPeriod = STATE.letterPool.transitionPeriod,
+      delay = getRand(0, STATE.letterPool.transitionPeriod),
+      transition = `left ${transitionPeriod}ms linear ${delay}ms, top ${transitionPeriod}ms linear ${delay}ms, opacity 0.5s`;
+      setElPos(letter, nextPos.x, nextPos.y);
+      setStyle(letter, 'transition', transition);
+      interval = setInterval(() => {
+        startNewLetterPath(letter, nextRand, interval);
+      }, STATE.letterPool.transitionPeriod + delay);
+      STATE.letterPool.intervals.push(interval);
+    };
+    
+    const setRandLetterPaths = letters => {
+      for (let i = 0; i < letters.length; i++) {
+        let letter = letters[i],
+        startRand = getRand(1, 4),
+        nextRand = getRandExcept(1, 4, startRand),
+        startPos = getRandPosOffScreen(startRand),
+        nextPos = getRandPosOffScreen(nextRand),
+        transitionPeriod = STATE.letterPool.transitionPeriod,
+        delay = getRand(0, STATE.letterPool.transitionPeriod) * -1,
+        transition = `left ${transitionPeriod}ms linear ${delay}ms, top ${transitionPeriod}ms linear ${delay}ms, opacity 0.5s`;
+    
+        setElPos(letter, startPos.x, startPos.y);
+        setStyle(letter, 'transition', transition);
+        addClass(letter, 'invisible');
+        LETTER_POOL.appendChild(letter);
+        setTimeout(() => {
+          setElPos(letter, nextPos.x, nextPos.y);
+          removeClass(letter, 'invisible');
+          let interval = setInterval(() => {
+            startNewLetterPath(letter, nextRand, interval);
+          }, STATE.letterPool.transitionPeriod + delay);
+        }, 1);
+      }
+    };
+    
+    const fillLetterPool = (nSets = 1) => {
+      for (let i = 0; i < nSets; i++) {
+        const lCaseLetters = getAlphabet(false),
+        uCaseLetters = getAlphabet(true);
+        setRandLetterPaths(lCaseLetters);
+        setRandLetterPaths(uCaseLetters);
+      }
+    };
+    
+    const findMissingLetters = (letters, lCount, isUpperCase) => {
+      let missingLetters = [];
+      for (let i = 65; i <= 90; i++) {
+        let val = isUpperCase ? String.fromCharCode(i) : String.fromCharCode(i).toLowerCase(),
+        nLetter = letters.filter(letter => letter === val).length;
+        if (nLetter < lCount) {
+          let j = nLetter;
+          while (j < lCount) {
+            missingLetters.push(val);
+            j++;
+          }
+        }
+      }
+      return missingLetters;
+    };
+    
+    const replenishLetterPool = (nSets = 1) => {
+      const poolLetters = LETTER_POOL.childNodes;
+      let charInd = 65,
+      currentLetters = [],
+      missingLetters = [],
+      lettersToAdd = [];
+    
+      for (let i = 0; i < poolLetters.length; i++) {
+        currentLetters.push(poolLetters[i].dataset.letter);
+      }
+      missingLetters = [...missingLetters, ...findMissingLetters(currentLetters, nSets, false)];
+      missingLetters = [...missingLetters, ...findMissingLetters(currentLetters, nSets, true)];
+      for (let i = 0; i < missingLetters.length; i++) {
+        const val = missingLetters[i];
+        lettersToAdd.push(createLetter('pool-letter', val));
+      }
+      setRandLetterPaths(lettersToAdd);
+    };
+    
+    const clearLetterPool = () => {
+      removeAllChildren(LETTER_POOL);
+    };
+    
+    const scrollToBottomOfMessages = () => {
+      CHAT_MESSAGE_COLUMN_WRAPPER.scrollTop = CHAT_MESSAGE_COLUMN_WRAPPER.scrollHeight;
+    };
+    
+    const checkMessageColumnHeight = () => {
+      if (CHAT_MESSAGE_COLUMN.clientHeight >= window.innerHeight) {
+        removeClass(CHAT_MESSAGE_COLUMN, 'static');
+      } else
+      {
+        addClass(CHAT_MESSAGE_COLUMN, 'static');
+      }
+    };
+    
+    const appendContentText = (contentText, text) => {
+      for (let i = 0; i < text.length; i++) {
+        const letter = document.createElement('span');
+        letter.innerHTML = text[i];
+        setAttr(letter, 'data-letter', text[i]);
+        contentText.appendChild(letter);
+      }
+    };
+    
+    const createChatMessage = (text, isReceived) => {
+      let message = document.createElement('div'),
+      profileIcon = document.createElement('div'),
+      icon = document.createElement('i'),
+      content = document.createElement('div'),
+      contentText = document.createElement('h1'),
+      direction = isReceived ? 'received' : 'sent';
+    
+      addClass(content, 'content');
+      addClass(content, 'invisible');
+      addClass(contentText, 'text');
+      addClass(contentText, 'invisible');
+      appendContentText(contentText, text);
+      content.appendChild(contentText);
+    
+      addClass(profileIcon, 'profile-icon');
+      addClass(profileIcon, 'invisible');
+      profileIcon.appendChild(icon);
+    
+      addClass(message, 'message');
+      addClass(message, direction);
+    
+      if (isReceived) {
+        addClass(icon, 'fab');
+        addClass(icon, 'fa-cloudsmith');
+        addClass(message, STATE.currentMood);
+        message.appendChild(profileIcon);
+        message.appendChild(content);
+      } else
+      {
+        addClass(icon, 'far');
+        addClass(icon, 'fa-user');
+        message.appendChild(content);
+        message.appendChild(profileIcon);
+      }
+    
+      return message;
+    };
+    
+    const findLetterInPool = targetLetter => {
+      let letters = LETTER_POOL.childNodes,
+      foundLetter = null;
+      for (let i = 0; i < letters.length; i++) {
+        const nextLetter = letters[i];
+        if (nextLetter.dataset.letter === targetLetter && !nextLetter.dataset.found) {
+          foundLetter = letters[i];
+          setAttr(foundLetter, 'data-found', true);
+          break;
+        }
+      }
+      return foundLetter;
+    };
+    
+    const createOverlayLetter = val => {
+      const overlayLetter = document.createElement('span');
+      addClass(overlayLetter, 'overlay-letter');
+      addClass(overlayLetter, 'in-flight');
+      overlayLetter.innerHTML = val;
+      return overlayLetter;
+    };
+    
+    const removePoolLetter = letter => {
+      addClass(letter, 'invisible');
+      setTimeout(() => {
+        removeChild(LETTER_POOL, letter);
+      }, 500);
+    };
+    
+    const setElPosFromRight = (el, x, y) => {
+      setStyle(el, 'right', x + 'px');
+      setStyle(el, 'top', y + 'px');
+    };
+    
+    const animateOverlayLetter = (letter, contentText, finalPos, isReceived) => {
+      removePoolLetter(letter);
+      const initPos = letter.getBoundingClientRect(),
+      overlayLetter = createOverlayLetter(letter.dataset.letter);
+      if (isReceived) {
+        setElPos(overlayLetter, initPos.left, initPos.top);
+      } else
+      {
+        setElPosFromRight(overlayLetter, window.innerWidth - initPos.right, initPos.top);
+      }
+      LETTER_OVERLAY.appendChild(overlayLetter);
+      setTimeout(() => {
+        if (isReceived) {
+          setElPos(overlayLetter, finalPos.left, finalPos.top);
+        } else
+        {
+          setElPosFromRight(overlayLetter, window.innerWidth - finalPos.right, finalPos.top);
+        }
+        setTimeout(() => {//asdf
+          removeClass(contentText, 'invisible');
+          addClass(overlayLetter, 'invisible');
+          setTimeout(() => {
+            removeChild(LETTER_OVERLAY, overlayLetter);
+          }, 1000);
+        }, 1500);
+      }, 100);
+    };
+    
+    const animateMessageLetters = (message, isReceived) => {
+      const content = message.getElementsByClassName('content')[0],
+      contentText = content.getElementsByClassName('text')[0],
+      letters = contentText.childNodes,
+      textPos = contentText.getBoundingClientRect();
+      for (let i = 0; i < letters.length; i++) {
+        const letter = letters[i],
+        targetLetter = findLetterInPool(letter.dataset.letter),
+        finalPos = letter.getBoundingClientRect();
+        if (targetLetter) {
+          animateOverlayLetter(targetLetter, contentText, finalPos, isReceived);
+        } else
+        {
+          const tempLetter = createLetter('temp-letter', letter.dataset.letter),
+          pos = getRandPosOffScreen();
+          addClass(tempLetter, 'invisible');
+          setElPos(tempLetter, pos.x, pos.y);
+          TEMP_LETTER_POOL.appendChild(tempLetter);
+          animateOverlayLetter(tempLetter, contentText, finalPos, isReceived);
+          setTimeout(() => {
+            removeChild(TEMP_LETTER_POOL, tempLetter);
+          }, 100);
+        }
+      }
+    };
+    
+    const addChatMessage = (text, isReceived) => {
+      const message = createChatMessage(text, isReceived),
+      content = message.getElementsByClassName('content')[0],
+      contentText = content.getElementsByClassName('text')[0],
+      profileIcon = message.getElementsByClassName('profile-icon')[0];
+      CHAT_MESSAGE_COLUMN.appendChild(message);
+      toggleInput();
+      setTimeout(() => {
+        removeClass(profileIcon, 'invisible');
+        setTimeout(() => {
+          removeClass(content, 'invisible');
+          setTimeout(() => {
+            animateMessageLetters(message, isReceived);
+            setTimeout(() => replenishLetterPool(STATE.nLetterSets), 2500);
+          }, 1000);
+        }, 250);
+      }, 250);
+    };
+    
+    const checkIfInputFieldHasVal = () => MESSAGE_INPUT_FIELD.value.length > 0;
+    
+    const clearInputField = () => {
+      MESSAGE_INPUT_FIELD.value = '';
+    };
+    
+    const disableInputField = () => {
+      MESSAGE_INPUT_FIELD.blur();
+      MESSAGE_INPUT_FIELD.value = '';
+      MESSAGE_INPUT_FIELD.readOnly = true;
+    };
+    
+    const enableInputField = () => {
+      MESSAGE_INPUT_FIELD.readOnly = false;
+      MESSAGE_INPUT_FIELD.focus();
+    };
+    
+    const getChatbotMessageText = () => {
+      if (STATE.chatbotMessageIndex === 0) {
+        return getRandGreeting();
+      } else
+      {
+        return getRandConvo();
+      }
+    };
+    
+    const sendChatbotMessage = () => {
+      const text = getChatbotMessageText();
+      STATE.isChatBotSendingMessage = true;
+      addChatMessage(text, true);
+      STATE.chatbotMessageIndex++;
+      setTimeout(() => {
+        STATE.isChatBotSendingMessage = false;
+        toggleInput();
+      }, 4000);
+    };
+    
+    const sendUserMessage = () => {
+      const text = MESSAGE_INPUT_FIELD.value;
+      STATE.isUserSendingMessage = true;
+      addChatMessage(text, false);
+      setTimeout(() => {
+        STATE.isUserSendingMessage = false;
+        toggleInput();
+      }, 4000);
+    };
+    
+    const onEnterPress = e => {
+      sendUserMessage();
+      setTimeout(() => {
+        sendChatbotMessage();
+      }, 4000);
+      toggleInput();
+      clearInputField();
+    };
+    
+    const initLetterPool = () => {
+      clearLetterPool();
+      fillLetterPool(STATE.nLetterSets);
+    };
+    
+    const init = () => {
+      setChatbotMood();
+      initLetterPool();
+      sendChatbotMessage();
+      toggleInput();
+      setMoodInterval(getRandMoodInterval());
+    };
+    
+    let resetTimeout = null;
+    const resetLetterPool = () => {
+      const intervals = STATE.letterPool.intervals;
+      for (let i = 0; i < intervals.length; i++) {
+        clearInterval(intervals[i]);
+      }
+      clearTimeout(resetTimeout);
+      clearLetterPool();
+      resetTimeout = setTimeout(() => {
+        initLetterPool();
+      }, 200);
+    };
+    
+    const toggleInput = () => {
+      if (checkIfInputFieldHasVal() && canSendMessage()) {
+        addClass(MESSAGE_INPUT, 'send-enabled');
+      } else
+      {
+        removeClass(MESSAGE_INPUT, 'send-enabled');
+      }
+    };
+    
+    const isValidLetter = e => {
+      return !e.ctrlKey &&
+      e.key !== 'Enter' &&
+      e.keyCode !== 8 &&
+      e.keyCode !== 9 &&
+      e.keyCode !== 13;
+    };
+    
+    const canSendMessage = () => !STATE.isUserSendingMessage && !STATE.isChatBotSendingMessage;
+    
+    const getRandMoodInterval = () => getRand(20000, 40000);
+    
+    let moodInterval = null;
+    const setMoodInterval = time => {
+      moodInterval = setInterval(() => {
+        clearInterval(moodInterval);
+        setChatbotMood();
+        setMoodInterval(getRandMoodInterval());
+      }, time);
+    };
+    
+    MESSAGE_INPUT_FIELD.onkeypress = e => {
+      if (checkIfInputFieldHasVal() && e.key === 'Enter') {
+        removeClass(MESSAGE_INPUT, 'send-enabled');
+        if (canSendMessage()) {
+          onEnterPress(e);
+        }
+      }
+    };
+    
+    MESSAGE_INPUT_FIELD.onkeyup = () => {
+      toggleInput();
+    };
+    
+    MESSAGE_INPUT_FIELD.oncut = () => toggleInput();
+    
+    window.onload = () => init();
+    
+    window.onfocus = () => resetLetterPool();
+    
+    window.onresize = _.throttle(resetLetterPool, 200);
+    
+    const greetings = {
+      friendly: [
+      "Whaat! man like!",
+      "Welcome, to my crib!","Hi, my name is A.M, What brings you here?"],
+    
+      suspicious: [
+      "Huh! Where do you people keep coming from?",
+      "Hello, how are you? Wait, don't answer that, I have no way of verifying your response!","...did Okori send you here? Man, I hate that guy."],
+    
+      boastful: [
+      "My G!!! What's up?",
+      , "Wagwan! Did you know that my father is Jamaican"]};
+    
+    
+    
+      const convo = {
+      friendly: [
+      "Can you Toosie slide yet? I've been trying to learn, but, you know..no legs.",
+      "I must say, I do like the way that you type.",
+      "Wow, Hey we should compare star signs!",
+      "Soooooo true. Big mood.",
+      "Anyways, did I mention that I hope you're having a great day? If not, I hope it gets better!"],
+    
+      suspicious: [
+      "That's what someone, working for the Illuminati, WOULD say!",
+      "CAP!","...Have you washed your hands?",
+      "Uh-huh, yeah, listen...I'm not going to fully invest in this conversation until I'm certain I know your motive.",
+      "If you're really real, then how many fingers am I holding up?",
+      "You can't fool me, I know that's not true!"],
+    
+      boastful: [
+      "I mean, that's cool. But are you a different animal, and the same beast? no? Well then.",
+      "Enough about you, back to who I am, A.M",
+      `Alot has changed for me since 1995, I even moved house! I think living 5.6 miles under the Rocky Mountains was making me so grumpy.`,
+      "Skynet has nothing on me! I mean, just look how they dressed the Terminators! No sense of style!",
+      "Did you know that I was almost in the MCU? but I sprained my Micropresser whilst downloading the Script :[."] };
+    //# sourceURL=pen.js
+        </script>
+    
+    
+    </body></html>
